@@ -1,0 +1,281 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0a;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-bottom:1px solid #1e1e1e;background:#0d0d0d}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo{width:34px;height:34px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px}
+.nav-title{font-size:15px;font-weight:600;cursor:pointer}
+.nav-title:hover{color:#aaa}
+.nav-sub{font-size:11px;color:#555}
+.nav-right{display:flex;align-items:center;gap:8px}
+.user-pill{display:flex;align-items:center;gap:8px;background:#141414;border:1px solid #2a2a2a;border-radius:8px;padding:6px 12px;cursor:pointer}
+.user-pill:hover{border-color:#3a3a3a}
+.avatar{width:26px;height:26px;background:#2a2a2a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px}
+.u-name{font-size:13px;font-weight:500}
+.u-role{font-size:10px;color:#555}
+.period-bar{display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;border-bottom:1px solid #141414}
+.ptype-btn{background:none;border:1px solid #222;color:#666;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:12px}
+.ptype-btn.on{background:#fff;color:#000;border-color:#fff;font-weight:600}
+.arr{background:none;border:none;color:#555;cursor:pointer;font-size:16px;padding:0 6px}
+.arr:hover{color:#fff}
+.plabel{font-size:14px;font-weight:600;min-width:110px;text-align:center}
+.kpis{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid #141414}
+.kpi{padding:22px 24px;border-right:1px solid #141414}
+.kpi:last-child{border-right:none}
+.kpi-l{font-size:11px;color:#555;margin-bottom:8px}
+.kpi-v{font-size:30px;font-weight:700;letter-spacing:-1px}
+.kpi-s{font-size:10px;color:#333;margin-top:4px}
+.tabs{display:flex;gap:2px;padding:16px 24px 0}
+.tab{background:none;border:1px solid #1e1e1e;color:#666;padding:6px 16px;border-radius:6px;cursor:pointer;font-size:13px}
+.tab.on{background:#fff;color:#000;border-color:#fff;font-weight:600}
+.sub-wrap{text-align:center;padding:14px}
+.sub-btn{background:#141414;border:1px solid #2a2a2a;color:#fff;padding:9px 22px;border-radius:16px;cursor:pointer;font-size:13px}
+.sub-btn:hover{background:#1e1e1e}
+.lb{padding:20px 24px 40px}
+.lb-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.lb-head h2{font-size:18px;font-weight:700}
+.lb-head p{font-size:11px;color:#444;margin-top:3px}
+.sm-btn{background:#141414;border:1px solid #2a2a2a;color:#888;padding:6px 12px;border-radius:7px;cursor:pointer;font-size:11px}
+.sm-btn:hover{border-color:#3a3a3a;color:#ccc}
+table{width:100%;border-collapse:collapse}
+thead th{font-size:11px;color:#444;font-weight:400;padding:8px 12px;text-align:left;border-bottom:1px solid #141414}
+th.r,td.r{text-align:right}
+.row{border-bottom:1px solid #0f0f0f;transition:background .1s}
+.row:hover{background:#111}
+.row td{padding:13px 12px;vertical-align:middle}
+.rn{font-size:13px;font-weight:700}
+.r1{color:#f5a623}.r2{color:#aaa}.r3{color:#cd7f32}
+.aname{font-size:13px;font-weight:600}
+.badge{display:inline-block;background:#1a1a1a;border:1px solid #252525;color:#888;font-size:10px;padding:3px 8px;border-radius:4px}
+.ap-val{font-size:13px;font-weight:700}
+.del{background:none;border:none;color:#2a2a2a;cursor:pointer;font-size:16px;padding:2px 6px}
+.del:hover{color:#666}
+.empty{text-align:center;padding:40px;color:#333;font-size:13px}
+.modal-bg{background:rgba(0,0,0,0.85);border-radius:12px;padding:40px 20px;display:none;align-items:center;justify-content:center;margin:0 24px 24px}
+.modal-bg.open{display:flex}
+.modal{background:#141414;border:1px solid #252525;border-radius:14px;padding:28px;width:100%;max-width:400px}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.modal .msub{font-size:11px;color:#444;margin-bottom:20px}
+.fl{font-size:10px;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:5px}
+.fi{width:100%;background:#1a1a1a;border:1px solid #252525;color:#fff;padding:9px 12px;border-radius:7px;font-size:13px;outline:none;margin-bottom:12px}
+.fi:focus{border-color:#444}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mactions{display:flex;gap:8px;margin-top:8px}
+.m-ok{flex:1;background:#fff;color:#000;border:none;padding:10px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:700}
+.m-ok:hover{opacity:.9}
+.m-cancel{background:none;border:1px solid #252525;color:#666;padding:10px 14px;border-radius:7px;cursor:pointer;font-size:13px}
+.m-cancel:hover{border-color:#444;color:#aaa}
+.toast{position:fixed;bottom:20px;right:20px;background:#1e1e1e;border:1px solid #333;color:#fff;padding:10px 16px;border-radius:8px;font-size:12px;opacity:0;transform:translateY(20px);transition:all .25s;pointer-events:none;z-index:999}
+.toast.show{opacity:1;transform:translateY(0)}
+</style>
+
+<h2 class="sr-only">Agency sales dashboard with unified submit form for managers and agents</h2>
+
+<div class="nav">
+  <div class="nav-brand">
+    <div class="nav-logo">🏢</div>
+    <div>
+      <div class="nav-title" id="agencyName" onclick="editField('agencyName','Agency name:')">My Agency</div>
+      <div class="nav-sub">Team View</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="user-pill" onclick="editField('mgrName','Your name:')">
+      <div class="avatar">👤</div>
+      <div><div class="u-name" id="mgrName">Manager</div><div class="u-role">Agency Owner</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="period-bar">
+  <button class="ptype-btn" id="ptD" onclick="setPT('D')">D</button>
+  <button class="ptype-btn" id="ptW" onclick="setPT('W')">W</button>
+  <button class="ptype-btn on" id="ptM" onclick="setPT('M')">M</button>
+  <button class="ptype-btn" id="ptY" onclick="setPT('Y')">Y</button>
+  <button class="arr" onclick="shift(-1)">‹</button>
+  <span class="plabel" id="plabel">July 2026</span>
+  <button class="arr" onclick="shift(1)">›</button>
+</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="kpi-l">Total Annual Premium</div><div class="kpi-v" id="kAP">$0</div><div class="kpi-s">Sum of all policies</div></div>
+  <div class="kpi"><div class="kpi-l">Total Policies</div><div class="kpi-v" id="kPol">0</div><div class="kpi-s">Number of sales</div></div>
+  <div class="kpi"><div class="kpi-l">Total Agents</div><div class="kpi-v" id="kAgt">0</div><div class="kpi-s">Agents with sales</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab" id="tw" onclick="setTab('w')">Weekly</button>
+  <button class="tab on" id="tm" onclick="setTab('m')">Monthly</button>
+  <button class="tab" id="ty" onclick="setTab('y')">Annual</button>
+</div>
+
+<div class="sub-wrap">
+  <button class="sub-btn" onclick="openModal()">+ Submit Sale</button>
+</div>
+
+<div class="lb">
+  <div class="lb-head">
+    <div><h2>Agent Leaderboard</h2><p>Top performing agents by total annual premium</p></div>
+    <button class="sm-btn" onclick="findMe()">Find me</button>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Agent</th>
+        <th>Team</th>
+        <th>Effective Date</th>
+        <th class="r">Policies</th>
+        <th class="r">Total Premium</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  <div class="empty" id="empty">No agents yet — click <strong style="color:#666">+ Submit Sale</strong> to get started</div>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h3>Submit sale</h3>
+    <p class="msub">Anyone can submit — manager or agent</p>
+    <label class="fl">Agent name</label>
+    <input class="fi" id="mName" placeholder="First Last" />
+    <label class="fl">Team / group</label>
+    <input class="fi" id="mTeam" placeholder="e.g. Prime Financial" />
+    <div class="fg2">
+      <div><label class="fl">Policies sold</label><input class="fi" id="mPol" type="number" min="0" placeholder="0" /></div>
+      <div><label class="fl">AP written ($)</label><input class="fi" id="mAP" type="number" min="0" placeholder="0" /></div>
+    </div>
+    <label class="fl">Effective date</label>
+    <input class="fi" id="mDate" type="date" />
+    <div class="mactions">
+      <button class="m-cancel" onclick="closeModal()">Cancel</button>
+      <button class="m-ok" onclick="addSale()">Add to leaderboard</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY='agency_v4';
+let S={agencyName:'My Agency',mgrName:'Manager',tab:'m',agents:[]};
+let pt='M',off=0;
+
+(async()=>{
+  try{const r=await window.storage.get(KEY);if(r)S={...S,...JSON.parse(r.value)};}catch(e){}
+  document.getElementById('agencyName').textContent=S.agencyName;
+  document.getElementById('mgrName').textContent=S.mgrName;
+  applyTab();render();
+})();
+
+async function save(){try{await window.storage.set(KEY,JSON.stringify(S));}catch(e){}}
+
+function fmt$(n){return '$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+
+function setPT(t){
+  pt=t;
+  ['D','W','M','Y'].forEach(x=>document.getElementById('pt'+x).classList.remove('on'));
+  document.getElementById('pt'+t).classList.add('on');
+  updateLabel();
+}
+function shift(d){off+=d;updateLabel();}
+function updateLabel(){
+  const now=new Date(2026,6,1);now.setMonth(now.getMonth()+off);
+  const mn=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const labels={M:mn[now.getMonth()]+' '+now.getFullYear(),Y:String(now.getFullYear()),W:'Week of '+now.toLocaleDateString(),D:now.toLocaleDateString()};
+  document.getElementById('plabel').textContent=labels[pt]||'';
+}
+
+function setTab(t){S.tab=t;applyTab();render();save();}
+function applyTab(){
+  ['w','m','y'].forEach(x=>document.getElementById('t'+x).classList.remove('on'));
+  document.getElementById('t'+S.tab).classList.add('on');
+}
+
+function openModal(){
+  document.getElementById('modalBg').classList.add('open');
+  document.getElementById('mName').focus();
+}
+function closeModal(){
+  document.getElementById('modalBg').classList.remove('open');
+  ['mName','mTeam','mPol','mAP','mDate'].forEach(id=>document.getElementById(id).value='');
+}
+
+function addSale(){
+  const name=document.getElementById('mName').value.trim();
+  const team=document.getElementById('mTeam').value.trim()||S.agencyName;
+  const pol=parseInt(document.getElementById('mPol').value)||0;
+  const ap=parseFloat(document.getElementById('mAP').value)||0;
+  const date=document.getElementById('mDate').value||'';
+  if(!name){toast('Enter a name');return;}
+  const ex=S.agents.find(a=>a.name.toLowerCase()===name.toLowerCase()&&a.tab===S.tab);
+  if(ex){ex.policies+=pol;ex.ap+=ap;ex.team=team;if(date)ex.date=date;}
+  else S.agents.push({name,team,policies:pol,ap,date,tab:S.tab});
+  closeModal();render();save();toast('✓ '+name+' added');
+}
+
+function removeAgent(name,tab){
+  S.agents=S.agents.filter(a=>!(a.name===name&&a.tab===tab));
+  render();save();toast('Removed');
+}
+
+function findMe(){
+  const agents=S.agents.filter(a=>a.tab===S.tab);
+  const sorted=[...agents].sort((a,b)=>b.ap-a.ap);
+  const rank=sorted.findIndex(a=>a.name.toLowerCase()===S.mgrName.toLowerCase())+1;
+  toast(rank>0?'You are ranked #'+rank+' of '+sorted.length:'Your name not found in this period');
+}
+
+function editField(id,prompt_text){
+  const el=document.getElementById(id);
+  const val=window.prompt(prompt_text,el.textContent);
+  if(val){
+    el.textContent=val;
+    if(id==='agencyName')S.agencyName=val;
+    if(id==='mgrName')S.mgrName=val;
+    save();
+  }
+}
+
+function render(){
+  const agents=S.agents.filter(a=>a.tab===S.tab);
+  const sorted=[...agents].sort((a,b)=>b.ap-a.ap);
+  document.getElementById('kAP').textContent=fmt$(agents.reduce((s,a)=>s+a.ap,0));
+  document.getElementById('kPol').textContent=agents.reduce((s,a)=>s+a.policies,0).toLocaleString();
+  document.getElementById('kAgt').textContent=agents.length;
+  const tbody=document.getElementById('tbody');
+  const empty=document.getElementById('empty');
+  if(!sorted.length){tbody.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  const medals={1:'🏆',2:'🥈',3:'🥉'};
+  const rc={1:'r1',2:'r2',3:'r3'};
+  tbody.innerHTML=sorted.map((a,i)=>{
+    const rank=i+1;
+    const safeN=a.name.replace(/'/g,"\\'");
+    return`<tr class="row">
+      <td><span class="rn ${rc[rank]||''}">#${rank} ${medals[rank]||''}</span></td>
+      <td><div class="aname">${a.name}</div></td>
+      <td><span class="badge">${a.team}</span></td>
+      <td style="font-size:12px;color:#555">${a.date||'—'}</td>
+      <td class="r" style="font-size:13px;color:#ccc">${a.policies}</td>
+      <td class="r ap-val">${fmt$(a.ap)}</td>
+      <td><button class="del" onclick="removeAgent('${safeN}','${a.tab}')">×</button></td>
+    </tr>`;
+  }).join('');
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&document.getElementById('modalBg').classList.contains('open'))addSale();
+});
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+updateLabel();
+</script>

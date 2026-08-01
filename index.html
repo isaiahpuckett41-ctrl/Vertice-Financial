@@ -98,4 +98,44 @@ th.r,td.r{text-align:right}
 <div class="modal-bg" id="modalBg">
   <div class="modal">
     <h3>Submit sale</h3>
-    <p
+    <p class="msub">Manager or agent — anyone can submit</p>
+    <label class="fl">Agent name</label><input class="fi" id="mName" placeholder="First Last" />
+    <label class="fl">Team / group</label><input class="fi" id="mTeam" placeholder="e.g. Vertice Financial" />
+    <div class="fg2">
+      <div><label class="fl">Policies sold</label><input class="fi" id="mPol" type="number" min="0" placeholder="0" /></div>
+      <div><label class="fl">AP written ($)</label><input class="fi" id="mAP" type="number" min="0" placeholder="0" /></div>
+    </div>
+    <div class="fg2">
+      <div><label class="fl">Date sold</label><input class="fi" id="mSold" type="date" /></div>
+      <div><label class="fl">Effective date</label><input class="fi" id="mDate" type="date" /></div>
+    </div>
+    <div class="mactions">
+      <button class="m-cancel" onclick="closeModal()">Cancel</button>
+      <button class="m-ok" id="submitBtn" onclick="addSale()">Add to leaderboard</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig={apiKey:"AIzaSyC2HOXiGj6pDnTJcxlo4fPEnBKBU4x1CgM",authDomain:"vertice-leaderboard.firebaseapp.com",databaseURL:"https://vertice-leaderboard-default-rtdb.firebaseio.com",projectId:"vertice-leaderboard",storageBucket:"vertice-leaderboard.firebasestorage.app",messagingSenderId:"36429923755",appId:"1:36429923755:web:5c80f09db7453644e3feee",measurementId:"G-HWN5NP2Q68"};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+let curTab='m',curRef=null,curListener=null;
+function weekNum(d){const u=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const day=u.getUTCDay()||7;u.setUTCDate(u.getUTCDate()+4-day);const y1=new Date(Date.UTC(u.getUTCFullYear(),0,1));return Math.ceil((((u-y1)/86400000)+1)/7);}
+function fbPath(t){const n=new Date(),y=n.getFullYear(),m=String(n.getMonth()+1).padStart(2,'0'),w=String(weekNum(n)).padStart(2,'0');if(t==='w')return 'newSales/w-'+y+'-'+w;if(t==='m')return 'newSales/m-'+y+'-'+m;return 'newSales/y-'+y;}
+function periodLabel(t){const n=new Date(),mn=['January','February','March','April','May','June','July','August','September','October','November','December'];if(t==='m')return mn[n.getMonth()]+' '+n.getFullYear();if(t==='y')return 'Full Year '+n.getFullYear();const w=weekNum(n),day=n.getDay()||7,mo=new Date(n);mo.setDate(n.getDate()-day+1);const su=new Date(mo);su.setDate(mo.getDate()+6);const f=d=>mn[d.getMonth()].slice(0,3)+' '+d.getDate();return 'Week '+w+' — '+f(mo)+' to '+f(su)+', '+n.getFullYear();}
+function setTab(t){curTab=t;['w','m','y'].forEach(x=>document.getElementById('t'+x).classList.remove('on'));document.getElementById('t'+t).classList.add('on');document.getElementById('periodBar').textContent=periodLabel(t);document.getElementById('resetNote').textContent=t==='w'?'Resets every Monday':t==='m'?'Resets 1st of each month':'Resets January 1st';document.getElementById('lbSub').textContent=t==='w'?"This week's top agents by AP":t==='m'?"This month's top agents by AP":"This year's top agents by AP";if(curRef&&curListener)curRef.off('value',curListener);curRef=db.ref(fbPath(t));curListener=curRef.on('value',snap=>{const d=snap.val()||{},map={};Object.values(d).forEach(s=>{if(!s||!s.name)return;const k=s.name.toLowerCase();if(!map[k])map[k]={name:s.name,team:s.team||'Vertice',policies:0,ap:0,sold:s.sold||s.date||''};map[k].policies+=Number(s.policies)||0;map[k].ap+=Number(s.ap)||0;if(s.sold)map[k].sold=s.sold;});render(Object.values(map));});}
+function openModal(){document.getElementById('modalBg').classList.add('open');document.getElementById('mName').focus();}
+function closeModal(){document.getElementById('modalBg').classList.remove('open');['mName','mTeam','mPol','mAP','mSold','mDate'].forEach(id=>document.getElementById(id).value='');document.getElementById('submitBtn').disabled=false;document.getElementById('submitBtn').textContent='Add to leaderboard';}
+async function addSale(){const name=document.getElementById('mName').value.trim(),team=document.getElementById('mTeam').value.trim()||'Vertice Financial',policies=parseInt(document.getElementById('mPol').value)||0,ap=parseFloat(document.getElementById('mAP').value)||0,sold=document.getElementById('mSold').value||'',date=document.getElementById('mDate').value||'';if(!name){toast('Enter a name');return;}const btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='Saving...';const sale={name,team,policies,ap,sold,date,ts:Date.now()};try{await Promise.all([db.ref(fbPath('w')).push(sale),db.ref(fbPath('m')).push(sale),db.ref(fbPath('y')).push(sale)]);closeModal();toast('✓ '+name+' — live for everyone');}catch(e){toast('Error — try again');btn.disabled=false;btn.textContent='Add to leaderboard';}}
+async function deleteAgent(name){if(!confirm('Delete '+name+' from all tabs?'))return;try{for(const t of['w','m','y']){const snap=await db.ref(fbPath(t)).once('value'),data=snap.val()||{};for(const[id,s]of Object.entries(data)){if(s&&s.name&&s.name.toLowerCase()===name.toLowerCase())await db.ref(fbPath(t)+'/'+id).remove();}}toast('✓ '+name+' deleted');}catch(e){toast('Error deleting');}}
+function fmt$(n){return'$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function render(agents){const s=[...agents].sort((a,b)=>b.ap-a.ap);document.getElementById('kAP').textContent=fmt$(agents.reduce((x,a)=>x+a.ap,0));document.getElementById('kPol').textContent=agents.reduce((x,a)=>x+a.policies,0).toLocaleString();document.getElementById('kAgt').textContent=agents.length;const tb=document.getElementById('tbody'),em=document.getElementById('empty');if(!s.length){tb.innerHTML='';em.style.display='block';return;}em.style.display='none';const med={1:'🏆',2:'🥈',3:'🥉'},rc={1:'r1',2:'r2',3:'r3'};tb.innerHTML=s.map((a,i)=>{const r=i+1,nm=a.name.replace(/'/g,"\\'");return'<tr class="row"><td><span class="rn '+(rc[r]||'')+'\">#'+r+' '+(med[r]||'')+'</span></td><td><div class="aname">'+a.name+'</div></td><td><span class="badge">'+a.team+'</span></td><td style="font-size:12px;color:#555">'+(a.sold||'—')+'</td><td class="r" style="font-size:13px;color:#ccc">'+a.policies+'</td><td class="r ap-val">'+fmt$(a.ap)+'</td><td><button class="del-btn" onclick="deleteAgent(\''+nm+'\')">×</button></td></tr>';}).join('');}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('modalBg').classList.contains('open'))addSale();});
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+setTab('m');
+</script>
+</body>
+</html>
